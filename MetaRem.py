@@ -8,7 +8,7 @@ import os, sys
 
 def ayuda():
 	#imprime la forma de utilizar la herramienta
-	print ('\n[*] Para usar ejecuta:\n\t\tMetaRem.py <archivo o carpeta>\n')
+	print ('\n[*] Para usar ejecuta:\n\t\t{} <archivos y/o carpetas>\n'.format(sys.argv[0]))
 
 def copiar_pixeles(archivo_imagen, es_solo_imagen=False):
 	imagen = Image.open(archivo_imagen)
