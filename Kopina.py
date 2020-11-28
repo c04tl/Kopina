@@ -1,3 +1,6 @@
+#Kopina significa extraer una cosa de otra
+
+
 #!/usr/bin/python3
 """
 Este progeama depende de python3-pil
