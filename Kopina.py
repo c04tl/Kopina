@@ -1,13 +1,11 @@
 #Kopina significa extraer una cosa de otra
-
-
 #!/usr/bin/python3
 """
-Este progeama depende de python3-pil
+Este programa depende de python3-pil
 """
 
 from PIL import Image
-import os, sys
+import os, sys, random, string
 
 def ayuda():
 	#imprime la forma de utilizar la herramienta
@@ -26,10 +24,11 @@ def copiar_pixeles(archivo_imagen, es_solo_imagen=False):
 	nombre_archivo = os.path.basename(archivo_imagen)
 	nombre_archivo, extension = os.path.splitext(nombre_archivo)
 	ruta = os.path.split(archivo_imagen)[0]
+	nombre_archivo = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
 
 	#para preservar calidad se puede agregar quality=95 al final, por dfecto guarda con calidad del 75%
 	if es_solo_imagen:
-		ruta = os.path.join(ruta,nombre_archivo+'_sin_metas'+extension)
+		ruta = os.path.join(ruta,nombre_archivo+extension)
 	else:
 		dir_nuevo = os.path.join(ruta,"sin_metas")
 		if not os.path.exists(dir_nuevo):
@@ -38,7 +37,7 @@ def copiar_pixeles(archivo_imagen, es_solo_imagen=False):
 				print("[!] Se creó el directorio exitosamente ;)")
 			except OSError as e:
 				print("[X] No se pudo crear el directorio :(")
-		ruta = os.path.join(ruta,dir_nuevo,nombre_archivo+'_sin_metas'+extension)
+		ruta = os.path.join(ruta,dir_nuevo,nombre_archivo+extension)
 	
 	imagen_sin_metadatos.save(ruta, quality=90)
 
