@@ -3,7 +3,7 @@ from PIL import Image, ImageOps
 from string import ascii_lowercase
 from random import choice
 import argparse
-import random.choice
+from random import choice
 
 
 EXTENSIONES_SOPORTADAS = {".jpg", ".jpeg", ".png", ".webp"}
@@ -27,10 +27,19 @@ def validar_calidad(calidad: int) -> int:
 
     return calidad
 
+def validar_longitud_nombre(longitud: int) -> int:
+    if not 5 <= longitud <= 50:
+        raise ValueError("La longitud debe estar entre 5 y 50.")
+
+    return longitud
+
+def generar_nombre(longitud: int) -> str:
+    return ''.join(choice(ascii_lowercase) for i in range(longitud))
 
 def comprimir_imagen(
     ruta_imagen: Path,
     ruta_salida: Path,
+    longitud_nombre: int = 10,
     calidad: int = 70,
     orientation: str = "keep",
     overwrite: bool = False
@@ -85,6 +94,7 @@ def comprimir_imagen(
 def comprimir_directorio(
     origen: Path,
     destino: Path,
+    longitud_nombre: int = 10,
     calidad: int = 70,
     orientation: str = "keep",
     recursive: bool = False,
@@ -117,6 +127,7 @@ def comprimir_directorio(
             comprimir_imagen(
                 ruta_imagen=archivo,
                 ruta_salida=ruta_salida,
+                longitud_nombre=longitud_nombre,
                 calidad=calidad,
                 orientation=orientation,
                 overwrite=overwrite
@@ -161,6 +172,13 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--name",
+        type=int,
+        default=10,
+        help="Longitud del nombre aleatorio del archivo entre 5 y 50. Default: 10."
+    )
+
+    parser.add_argument(
         "--recursive",
         action="store_true",
         help="Procesa imágenes dentro de subcarpetas."
@@ -175,13 +193,16 @@ def main() -> None:
     args = parser.parse_args()
 
     calidad = validar_calidad(args.quality)
+    longitud = validar_longitud_nombre(args.name)
     entrada = Path(args.input)
     salida = Path(args.output)
+    print("Longitud: ", longitud)
 
     if entrada.is_file():
         comprimir_imagen(
             ruta_imagen=entrada,
             ruta_salida=salida,
+            longitud_nombre=longitud,
             calidad=calidad,
             orientation=args.orientation,
             overwrite=args.overwrite
@@ -191,6 +212,7 @@ def main() -> None:
         comprimir_directorio(
             origen=entrada,
             destino=salida,
+            longitud_nombre=longitud,
             calidad=calidad,
             orientation=args.orientation,
             recursive=args.recursive,
